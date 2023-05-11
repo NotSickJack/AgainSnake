@@ -2,6 +2,9 @@ export default class Snake {
   constructor(direction) {
     this.segments = [];
     this.direction = direction;
+
+
+
   }
 
   createSegments(minX, minY, maxX, maxY) {
@@ -42,6 +45,7 @@ export default class Snake {
   }
 
   render(ctx, cellSize) {
+    ctx.fillStyle = "black";
     // questo è il nostro array
     // segments = [
     //   { x: 0, y: 0 }, 0
@@ -60,6 +64,17 @@ export default class Snake {
     });
   }
 
+  setDirection(direction) {
+    if (direction === "left" ||
+      direction === "right" ||
+      direction === "up" ||
+      direction === "down") {
+      this.direction = direction;
+    }
+
+
+
+  }
   move(head) {
     this.segments.pop();
     this.segments.unshift(head);

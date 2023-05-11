@@ -1,4 +1,5 @@
 import Snake from "./Snake.js";
+import Food from "./Food.js";
 
 export default class Game {
   constructor() {
@@ -10,10 +11,38 @@ export default class Game {
     this.before = new Date().getTime();
 
     this.createInterval();
+    this.eventListeners();
+  }
+
+  eventListeners() {
+    const handleEvent = (event) => {
+      const possibleEvents = {
+        ArrowUp: "up",
+        ArrowDown: "down",
+        ArrowLeft: "left",
+        ArrowRight: "right",
+      };
+
+      const direction = possibleEvents[event.code];
+
+      if (direction === "up" && this.snake.direction === "down" ||
+        direction === "right" && this.snake.direction === "left" ||
+        direction === "down" && this.snake.direction === "up" ||
+        direction === "left" && this.snake.direction === "right") {
+        return;
+      }
+
+
+
+      this.snake.setDirection(direction);
+    };
+
+    document.addEventListener("keydown", handleEvent);
   }
 
   play() {
     this.spawnSnake();
+    this.spawnFood();
   }
 
   createInterval() {
@@ -39,10 +68,23 @@ export default class Game {
 
     switch (direction) {
       case "left":
+        if (head.x === 0) {
+          head.x = this.cellCount;
+        }
+        head.x = head.x - 1;
         break;
       case "right":
+        head.x = head.x + 1;
+        if (head.x === this.cellCount) {
+          head.x = 0;
+        }
         break;
       case "up":
+        if (head.y === 0) {
+          head.y = this.cellCount;
+        }
+        head.y = head.y - 1;
+
         break;
       case "down":
         head.y = head.y + 1;
@@ -55,7 +97,11 @@ export default class Game {
     this.snake.move(head);
 
     this.ctx.clearRect(0, 0, 540, 540);
+
+    this.ctx.fillStyle = "#a7d204";
+    this.ctx.fillRect(0, 0, 540, 540);
     this.snake.render(this.ctx, this.cellSize);
+    this.food.render(this.ctx, this.cellSize);
   }
 
   spawnSnake() {
@@ -74,7 +120,13 @@ export default class Game {
     this.snake.render(ctx, cellSize);
   }
 
-  endGame() {}
+  spawnFood() {
+    this.food = new Food(0, 0);
+    this.food.render(ctx, this.cellSize);
+
+  }
+
+  endGame() { }
 
   testCanvas() {
     // SET FILL STYLE IN GIALLO
