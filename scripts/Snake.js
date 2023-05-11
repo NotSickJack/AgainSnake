@@ -46,13 +46,6 @@ export default class Snake {
 
   render(ctx, cellSize) {
     ctx.fillStyle = "black";
-    // questo è il nostro array
-    // segments = [
-    //   { x: 0, y: 0 }, 0
-    //   { x: 0, y: 1 }, 1
-    //   { x: 0, y: 2 }, 2
-    //   { x: 0, y: 3 }, 3
-    // ];
 
     this.segments.forEach((segment) => {
       ctx.fillRect(
@@ -75,8 +68,10 @@ export default class Snake {
 
 
   }
-  move(head) {
-    this.segments.pop();
+  move(head, hasEaten) {
+    if (!hasEaten) {
+      this.segments.pop();
+    }
     this.segments.unshift(head);
   }
 }
